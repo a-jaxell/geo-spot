@@ -4,6 +4,8 @@ import com.laboration2.entities.Category;
 import com.laboration2.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CategoryService {
 
@@ -15,5 +17,9 @@ public class CategoryService {
 
     public Category getOneCategory(int id) {
         return repository.findBy(id);
+    }
+
+    public List<Category> getAllCategories() {
+        return repository.findAll();
     }
 }

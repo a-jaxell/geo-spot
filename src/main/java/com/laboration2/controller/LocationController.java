@@ -3,13 +3,15 @@ package com.laboration2.controller;
 import com.laboration2.entities.Location;
 import com.laboration2.service.LocationService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("api/location")
+@RequestMapping("api/locations")
 public class LocationController {
 
     private final LocationService service;
@@ -19,7 +21,12 @@ public class LocationController {
     }
 
     @GetMapping
-    public List<Location> getLocations(){
+    public List<Location> getAllLocations(){
         return service.getAllLocations();
+    }
+
+    @GetMapping("{id}")
+    public Optional<Location> getLocation(@PathVariable int id){
+        return service.getLocationById(id);
     }
 }

@@ -5,6 +5,7 @@ import com.laboration2.repository.LocationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LocationService {
@@ -17,5 +18,9 @@ public class LocationService {
 
     public List<Location> getAllLocations() {
         return repository.findAllLocations();
+    }
+
+    public Optional<Location> getLocationById(int id) {
+        return repository.findById(id);
     }
 }
