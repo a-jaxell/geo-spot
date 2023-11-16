@@ -1,4 +1,4 @@
-package com.example.laboration2;
+package com.laboration2;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
