@@ -15,8 +15,8 @@ public class CategoryService {
         this.repository = categoryRepository;
     }
 
-    public Category getOneCategory(int id) {
-        return repository.findBy(id);
+    public Category getOneCategory(Long id) {
+        return repository.findCategoryById(id);
     }
 
     public List<Category> getAllCategories() {

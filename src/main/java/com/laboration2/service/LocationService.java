@@ -17,7 +17,7 @@ public class LocationService {
     }
 
     public List<Location> getAllLocations() {
-        return repository.findAllLocations();
+        return repository.findAll();
     }
 
     public Optional<Location> getLocationById(int id) {
