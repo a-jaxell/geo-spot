@@ -1,7 +1,7 @@
-package com.laboration2.controller;
+package com.laboration2.location;
 
-import com.laboration2.entities.Location;
-import com.laboration2.service.LocationService;
+import com.laboration2.location.Location;
+import com.laboration2.location.LocationService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
