@@ -10,6 +10,7 @@ import java.time.Instant;
 
 
 @Entity
+@Table(name = "location", schema = "test")
 public class Location {
 
     @Id

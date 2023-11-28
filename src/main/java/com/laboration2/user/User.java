@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "users", schema = "performance_schema")
+@Table(name = "user", schema = "test")
 public class User {
 
     @Id

@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface LocationRepository extends ListCrudRepository<Location, Integer> {
-    List<Location> findAllBy();
+
 }
