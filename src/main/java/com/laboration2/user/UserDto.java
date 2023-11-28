@@ -1,6 +1,5 @@
-package com.laboration2.dto;
+package com.laboration2.user;
 
-import com.laboration2.entities.User;
 import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;

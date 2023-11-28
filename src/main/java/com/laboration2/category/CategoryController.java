@@ -1,7 +1,6 @@
-package com.laboration2.controller;
+package com.laboration2.category;
 
-import com.laboration2.entities.Category;
-import com.laboration2.service.CategoryService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +22,8 @@ public class CategoryController {
         return service.getAllCategories();
     }
     @GetMapping("{id}")
-    public Category getCategoryById(@PathVariable Long id){
-        return service.getOneCategory(id);
+    public ResponseEntity<CategoryDto> getCategoryById(@PathVariable Long id){
+        var city = service.getOneCategory(id);
+        return city.map( categoryDto -> ResponseEntity.ok().body(categoryDto)).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

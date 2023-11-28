@@ -1,7 +1,7 @@
-package com.laboration2.service;
+package com.laboration2.location;
 
-import com.laboration2.entities.Location;
-import com.laboration2.repository.LocationRepository;
+import com.laboration2.location.Location;
+import com.laboration2.location.LocationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

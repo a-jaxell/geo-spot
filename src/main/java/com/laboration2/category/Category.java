@@ -1,5 +1,6 @@
-package com.laboration2.entities;
+package com.laboration2.category;
 
+import com.laboration2.location.Location;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 

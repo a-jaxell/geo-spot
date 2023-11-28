@@ -1,7 +1,6 @@
-package com.laboration2.repository;
+package com.laboration2.location;
 
-import com.laboration2.entities.Location;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.laboration2.location.Location;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.stereotype.Repository;
 

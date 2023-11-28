@@ -1,14 +1,12 @@
-package com.laboration2.entities;
+package com.laboration2.location;
 
+import com.laboration2.category.Category;
+import com.laboration2.user.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 
 
 import java.time.Instant;
-import java.time.LocalDate;
 
 
 @Entity

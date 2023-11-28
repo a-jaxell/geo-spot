@@ -1,4 +1,4 @@
-package com.laboration2.entities;
+package com.laboration2.user;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
