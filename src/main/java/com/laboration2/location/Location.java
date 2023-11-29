@@ -1,5 +1,6 @@
 package com.laboration2.location;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.laboration2.category.Category;
 import com.laboration2.user.User;
 import jakarta.persistence.*;
@@ -37,10 +38,12 @@ public class Location {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category")
+    @JsonBackReference
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @JsonBackReference
     private User user;
 
     public User getUser() {

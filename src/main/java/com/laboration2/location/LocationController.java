@@ -1,11 +1,6 @@
 package com.laboration2.location;
 
-import com.laboration2.location.Location;
-import com.laboration2.location.LocationService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,5 +23,24 @@ public class LocationController {
     @GetMapping("{id}")
     public Optional<Location> getLocation(@PathVariable int id){
         return service.getLocationById(id);
+    }
+
+    @PostMapping
+    public String createNewLocation(){
+        // Should accept JSON with params needed for new location
+        // requires login
+        return "Create new location";
+    }
+    @PatchMapping
+    public String modifyExistingLocation(){
+        // Modify anything but coordinates on your own locations
+        //Requires login
+        return "Patch a location";
+    }
+    @DeleteMapping
+    public String deleteLocation(){
+        //Delete one of your own locations
+        // requires login
+        return "Delete an Location";
     }
 }

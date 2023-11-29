@@ -1,5 +1,6 @@
 package com.laboration2.category;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.laboration2.location.Location;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -28,6 +29,7 @@ public class Category {
     private String description;
 
     @OneToMany(mappedBy = "category")
+    @JsonManagedReference
     private Set<Location> locations = new LinkedHashSet<>();
 
     public Set<Location> getLocations() {

@@ -1,7 +1,5 @@
 package com.laboration2.location;
 
-import com.laboration2.category.CategoryDto;
-import com.laboration2.user.User;
 import com.laboration2.user.UserDto;
 import jakarta.validation.constraints.Size;
 

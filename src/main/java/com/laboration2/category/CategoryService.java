@@ -1,4 +1,5 @@
 package com.laboration2.category;
+import com.laboration2.category.dto.CategoryDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
