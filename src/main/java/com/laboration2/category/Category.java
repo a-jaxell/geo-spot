@@ -2,6 +2,7 @@ package com.laboration2.category;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.laboration2.location.Location;
+import com.laboration2.validation.EmojiSymbol;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -28,6 +29,7 @@ public class Category {
     private String name;
 
     // Göra egen validation rule för emojisymboler. en annotation  @Emoji
+    @EmojiSymbol
     @Size(max = 255)
     @Column(name = "symbol")
     private String symbol;

@@ -1,5 +1,8 @@
 package com.laboration2.location;
 
+import com.vdurmont.emoji.EmojiManager;
+import com.vdurmont.emoji.EmojiParser;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +21,12 @@ public class LocationController {
     @GetMapping
     public List<Location> getAllLocations(){
         return service.getAllLocations();
+    }
+
+    @GetMapping(value = "/emoji", produces = "application/json")
+    public Boolean emojiTest(){
+        String str = EmojiParser.parseToUnicode(":grinning:");
+        return EmojiManager.isEmoji(str);
     }
 
     @GetMapping("{id}")
