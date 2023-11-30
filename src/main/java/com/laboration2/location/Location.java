@@ -11,6 +11,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.geolatte.geom.C2D;
 import org.geolatte.geom.G2D;
 import org.geolatte.geom.Point;
 import org.hibernate.annotations.CreationTimestamp;
@@ -41,7 +42,7 @@ public class Location {
     @Column(name = "location_name")
     private String locationName;
 
-    @Column(name = "is_private")
+    @Column(name = "visible")
     private Boolean visible;
 
     @Column(name = "last_edit")
@@ -67,16 +68,9 @@ public class Location {
     private User user;
 
     //Importera dependencies, geolatte, hibernate spatial.
-    @JsonIgnore
     @JsonSerialize(using = Point2DSerializer.class) // egen definierad klass för serialisering
-    private Point<G2D> coordinates;
+    private Point<C2D> coordinates;
 
     // Implementera equals/hashcode. JPA utilities equals/hashcode generator
     // Find a better way of representing coordinates here. Maybe there is an interface in the hibernate-spatial dependency.
-/*
-    TODO [JPA Buddy] create field to map the 'coordinates' column
-     Available actions: Define target Java type | Uncomment as is | Remove column mapping
-    @Column(name = "coordinates", columnDefinition = "geometry(0, 0)")
-    private java.lang.Object coordinates;
-*/
 }

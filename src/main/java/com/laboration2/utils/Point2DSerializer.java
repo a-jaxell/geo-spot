@@ -3,15 +3,16 @@ package com.laboration2.utils;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import org.geolatte.geom.C2D;
 import org.geolatte.geom.G2D;
 import org.geolatte.geom.Point;
 
 import java.io.IOException;
 
-public class Point2DSerializer extends JsonSerializer<Point<G2D>> {
+public class Point2DSerializer extends JsonSerializer<Point<C2D>> {
 
     @Override
-    public void serialize(Point<G2D> value, JsonGenerator gen, SerializerProvider serializerProvider) throws IOException {
+    public void serialize(Point<C2D> value, JsonGenerator gen, SerializerProvider serializerProvider) throws IOException {
         //        gen.writeStartArray();
         //        gen.writeNumber(value.getPosition().getCoordinate(1));
         //        gen.writeNumber(value.getPosition().getCoordinate(0));
