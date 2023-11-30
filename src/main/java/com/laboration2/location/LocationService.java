@@ -1,7 +1,5 @@
 package com.laboration2.location;
 
-import com.laboration2.location.Location;
-import com.laboration2.location.LocationRepository;
 import com.laboration2.user.UserDto;
 import org.springframework.stereotype.Service;
 
@@ -34,9 +32,9 @@ public class LocationService {
                 new LocationDto(
                     location1.getId(),
                     location1.getLocationName(),
-                    location1.getIsPrivate(),
-                    location1.getLastEdit(),
-                    location1.getDateCreated(),
+                    location1.getVisible(),
+                    location1.getLastModifiedDateTime(),
+                    location1.getCreatedDateTime(),
                     location1.getDescription(),
                     location1.getCategory().getName(),
                     new UserDto(
@@ -48,3 +46,9 @@ public class LocationService {
         );
     }
 }
+
+// Viktigt att swappa longitud och latitud SQL,  har motsatt lagring
+// Ha transactional på add place, för att undvika
+//Har man bara en save så behövs transactional inte egentligen
+
+
