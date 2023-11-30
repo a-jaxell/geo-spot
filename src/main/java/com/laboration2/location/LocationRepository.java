@@ -10,3 +10,5 @@ import java.util.List;
 public interface LocationRepository extends ListCrudRepository<Location, Integer> {
 
 }
+// List<Place> findPlacesByUserId(string userId);
+//Entitygraph använder vi om vi har fetchType LAZY på en @ManyToOne relation

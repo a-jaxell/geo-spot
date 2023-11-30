@@ -22,7 +22,7 @@ public class CategoryController {
     public List<Category> getAllCategories(){
         return service.getAllCategories();
     }
-    @GetMapping("{id}")
+    @GetMapping("{id: *\\d+}")
     public ResponseEntity<CategoryDto> getCategoryById(@PathVariable Long id){
         var category = service.getOneCategory(id);
         return category.map( categoryDto -> ResponseEntity.ok().body(categoryDto)).orElseGet(() -> ResponseEntity.notFound().build());
