@@ -24,7 +24,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/locations").hasRole("USER")
                         .requestMatchers(HttpMethod.GET, "/api/locations/*").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/locations/nearby").permitAll()
-                        .anyRequest().denyAll()
+                        .anyRequest().permitAll()
                 )
                 .build();
     }
