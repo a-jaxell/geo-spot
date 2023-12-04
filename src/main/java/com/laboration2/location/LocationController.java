@@ -2,8 +2,10 @@ package com.laboration2.location;
 
 import com.vdurmont.emoji.EmojiManager;
 import com.vdurmont.emoji.EmojiParser;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,8 +32,11 @@ public class LocationController {
     }
 
     @GetMapping("{id}")
-    public Optional<Location> getLocation(@PathVariable int id){
-        return service.getLocationById(id);
+    public Location getLocation(@PathVariable int id){
+        Optional<Location> location = service.getLocationById(id);
+
+        return location.orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found."));
     }
 
     @PostMapping
