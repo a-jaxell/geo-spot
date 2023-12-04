@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -28,11 +29,13 @@ public class CategoryController {
         return category.map( categoryDto -> ResponseEntity.ok().body(categoryDto)).orElseGet(() -> ResponseEntity.notFound().build());
     }
     @PostMapping
-    public ResponseEntity<CreateCategoryRequest> createNewCategory(@RequestBody CreateCategoryRequest request ){
-        // Post shit into database, if successful. Return response with created object.
-        // var category = service.getOneCategory(1L);
-        //return category.map(categoryDto -> ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(categoryDto)).orElseGet(() -> ResponseEntity.notFound().build());
-        return ResponseEntity.ok().body(request);
+    public ResponseEntity<CategoryDto> createNewCategory(@RequestBody @Valid CategoryDto categoryDto ){
+
+        CategoryDto categoryResponse = service.createNewCategory(categoryDto);
+
+        if(categoryResponse != null) {
+            ResponseEntity.created(URI.create("/categories/" + categoryResponse.id())).build();
+        } return ResponseEntity.badRequest().build();
     }
 
 }

@@ -1,12 +1,14 @@
 package com.laboration2.location;
 
+import com.laboration2.utils.LocationMapper;
 import com.vdurmont.emoji.EmojiManager;
 import com.vdurmont.emoji.EmojiParser;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,10 +42,15 @@ public class LocationController {
     }
 
     @PostMapping
-    public String createNewLocation(){
-        // Should accept JSON with params needed for new location
+    public ResponseEntity<LocationDto> createNewLocation(LocationDto location){
         // requires login
-        return "Create new location";
+       var locationResponse = service.createNewLocation(location);
+
+       if(locationResponse != null){
+           return ResponseEntity.created(URI.create("/locations/" + locationResponse.id())).build();
+       } else {
+           return ResponseEntity.badRequest().build();
+       }
     }
     @PatchMapping
     public String modifyExistingLocation(){
@@ -52,9 +59,10 @@ public class LocationController {
         return "Patch a location";
     }
     @DeleteMapping
-    public String deleteLocation(){
+    public String deleteLocation() {
         //Delete one of your own locations
         // requires login
         return "Delete an Location";
     }
 }
+

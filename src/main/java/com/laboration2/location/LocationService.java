@@ -1,6 +1,7 @@
 package com.laboration2.location;
 
 import com.laboration2.user.UserDto;
+import com.laboration2.utils.LocationMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,9 +11,10 @@ import java.util.Optional;
 public class LocationService {
 
     LocationRepository repository;
+    LocationMapper mapper;
 
-    public LocationService(LocationRepository locationRepository){
-        this.repository = locationRepository;
+    public LocationService(LocationRepository locationRepository, LocationMapper locationMapper){
+        this.repository = locationRepository; this.mapper = locationMapper;
     }
 
     public List<Location> getAllLocations() {
@@ -44,6 +46,14 @@ public class LocationService {
                     )
                 )
         );
+    }
+
+    public LocationDto createNewLocation(LocationDto locationDto){
+
+        Location newLocation = mapper.convertToEntity(locationDto);
+        // repository.save(newLocation);
+
+        return mapper.convertToDto(newLocation);
     }
 }
 

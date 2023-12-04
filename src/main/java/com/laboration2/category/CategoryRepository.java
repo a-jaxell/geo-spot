@@ -12,10 +12,9 @@ import java.util.Optional;
 @Repository
 public interface CategoryRepository extends ListCrudRepository<Category, Long> {
 
+
     //ProjectionCategory findCategoryById(@Param("categoryId") Long categoryId);
     // List<ProjectionCategory> findAllProjectedBy();
-
-
 }
 
 // vill ju inte ta med visible = false för de är privata
