@@ -1,9 +1,6 @@
 package com.laboration2.location;
 
-import com.laboration2.user.UserDto;
-import com.laboration2.utils.LocationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -75,4 +72,3 @@ public class LocationService {
         return distance <= radius;
     }
 }
-// Viktigt att swappa longitud och latitud SQL, har motsatt lagring
