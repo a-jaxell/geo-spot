@@ -19,7 +19,6 @@ import java.util.Set;
 public class Category {
 
     @Id
-    @Setter(AccessLevel.NONE)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
