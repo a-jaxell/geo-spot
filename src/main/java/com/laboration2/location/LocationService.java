@@ -1,8 +1,7 @@
 package com.laboration2.location;
 
-import com.laboration2.location.Location;
-import com.laboration2.location.LocationRepository;
 import com.laboration2.user.UserDto;
+import com.laboration2.utils.LocationMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,9 +11,10 @@ import java.util.Optional;
 public class LocationService {
 
     LocationRepository repository;
+    LocationMapper mapper;
 
-    public LocationService(LocationRepository locationRepository){
-        this.repository = locationRepository;
+    public LocationService(LocationRepository locationRepository, LocationMapper locationMapper){
+        this.repository = locationRepository; this.mapper = locationMapper;
     }
 
     public List<Location> getAllLocations() {
@@ -34,9 +34,9 @@ public class LocationService {
                 new LocationDto(
                     location1.getId(),
                     location1.getLocationName(),
-                    location1.getIsPrivate(),
-                    location1.getLastEdit(),
-                    location1.getDateCreated(),
+                    location1.getVisible(),
+                    location1.getLastModifiedDateTime(),
+                    location1.getCreatedDateTime(),
                     location1.getDescription(),
                     location1.getCategory().getName(),
                     new UserDto(
@@ -47,4 +47,18 @@ public class LocationService {
                 )
         );
     }
+
+    public LocationDto createNewLocation(LocationDto locationDto){
+
+        Location newLocation = mapper.convertToEntity(locationDto);
+        // repository.save(newLocation);
+
+        return mapper.convertToDto(newLocation);
+    }
 }
+
+// Viktigt att swappa longitud och latitud SQL,  har motsatt lagring
+// Ha transactional på add place, för att undvika
+//Har man bara en save så behövs transactional inte egentligen
+
+

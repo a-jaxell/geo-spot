@@ -1,24 +1,35 @@
 package com.laboration2.category;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.laboration2.location.Location;
+import com.laboration2.validation.EmojiSymbol;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "category", schema = "test")
+@Getter
+@Setter
+@Table(name = "category")
 public class Category {
+
     @Id
+    @Setter(AccessLevel.NONE)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
     @Size(max = 255)
-    @Column(name = "name")
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
+    // Göra egen validation rule för emojisymboler. en annotation  @Emoji
+    @EmojiSymbol
     @Size(max = 255)
     @Column(name = "symbol")
     private String symbol;
@@ -28,45 +39,7 @@ public class Category {
     private String description;
 
     @OneToMany(mappedBy = "category")
+    @JsonIgnore
     private Set<Location> locations = new LinkedHashSet<>();
 
-    public Set<Location> getLocations() {
-        return locations;
-    }
-
-    public void setLocations(Set<Location> locations) {
-        this.locations = locations;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getSymbol() {
-        return symbol;
-    }
-
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

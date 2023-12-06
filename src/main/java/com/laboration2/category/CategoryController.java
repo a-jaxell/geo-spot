@@ -1,11 +1,13 @@
 package com.laboration2.category;
 
+import com.laboration2.category.dto.CategoryDto;
+import com.laboration2.category.dto.CreateCategoryRequest;
+import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -21,9 +23,19 @@ public class CategoryController {
     public List<Category> getAllCategories(){
         return service.getAllCategories();
     }
-    @GetMapping("{id}")
+    @GetMapping("{id: *\\d+}")
     public ResponseEntity<CategoryDto> getCategoryById(@PathVariable Long id){
-        var city = service.getOneCategory(id);
-        return city.map( categoryDto -> ResponseEntity.ok().body(categoryDto)).orElseGet(() -> ResponseEntity.notFound().build());
+        var category = service.getOneCategory(id);
+        return category.map( categoryDto -> ResponseEntity.ok().body(categoryDto)).orElseGet(() -> ResponseEntity.notFound().build());
     }
+    @PostMapping
+    public ResponseEntity<CategoryDto> createNewCategory(@RequestBody @Valid CategoryDto categoryDto ){
+
+        CategoryDto categoryResponse = service.createNewCategory(categoryDto);
+
+        if(categoryResponse != null) {
+            ResponseEntity.created(URI.create("/categories/" + categoryResponse.id())).build();
+        } return ResponseEntity.badRequest().build();
+    }
+
 }
