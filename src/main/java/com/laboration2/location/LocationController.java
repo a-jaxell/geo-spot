@@ -3,6 +3,10 @@ package com.laboration2.location;
 import com.laboration2.utils.LocationMapper;
 import com.vdurmont.emoji.EmojiManager;
 import com.vdurmont.emoji.EmojiParser;
+import jakarta.validation.Valid;
+import org.geolatte.geom.C2D;
+import org.geolatte.geom.Point;
+import org.geolatte.geom.Polygon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +56,14 @@ public class LocationController {
     public ResponseEntity<Void> deleteLocation(@PathVariable int id) {
         locationService.deleteLocation(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/nearby")
+    public ResponseEntity<List<Location>> nearbyLocations(@RequestParam double lat,
+                                                          @RequestParam double lng,
+                                                          @RequestParam double radius
+    ){
+        return ResponseEntity.ok().body(locationService.nearbyLocations(lat, lng, radius));
     }
 
 }

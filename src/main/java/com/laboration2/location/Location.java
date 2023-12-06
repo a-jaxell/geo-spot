@@ -3,8 +3,6 @@ package com.laboration2.location;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.laboration2.category.Category;
 import com.laboration2.user.User;
@@ -13,18 +11,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.geolatte.geom.C2D;
-import org.geolatte.geom.G2D;
 import org.geolatte.geom.Point;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 
 import java.time.LocalDateTime;
-
-// Add getter/setter annotation from lombok to minimaze file size
-//@Setter(AccessLevel.NONE) on field to restrict access to generated setters.
-// @AllArgsConstructor
-// @NoArgsConstructor
 
 @Entity
 @Getter

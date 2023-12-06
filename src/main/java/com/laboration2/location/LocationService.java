@@ -3,10 +3,12 @@ package com.laboration2.location;
 import com.laboration2.user.UserDto;
 import com.laboration2.utils.LocationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class LocationService {
@@ -43,9 +45,34 @@ public class LocationService {
     public void deleteLocation(int id) {
         locationRepository.deleteById(id);
     }
+
+    public List<Location> nearbyLocations(double lat, double lng, double radius) {
+
+        return locationRepository.findAll().stream()
+                .filter(location ->
+                        isLocationWithinRadius(location, lat, lng, radius))
+                                .collect(Collectors.toList());
+
+    }
+    private boolean isLocationWithinRadius(Location location, double targetLat, double targetLng, double radius){
+
+        double earthRadius = 6371; // Earth's radius in kilometers
+
+        double locationLat = location.getCoordinates().getPosition().getY();
+        double locationLng = location.getCoordinates().getPosition().getX();
+
+        double dLat = Math.toRadians(locationLat - targetLat);
+        double dLng = Math.toRadians(locationLng - targetLng);
+
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(targetLat)) * Math.cos(Math.toRadians(locationLat)) *
+                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        double distance = earthRadius * c;
+
+        return distance <= radius;
+    }
 }
-// Viktigt att swappa longitud och latitud SQL,  har motsatt lagring
-// Ha transactional på add place, för att undvika
-//Har man bara en save så behövs transactional inte egentligen
-
-
+// Viktigt att swappa longitud och latitud SQL, har motsatt lagring
