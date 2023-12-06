@@ -1,16 +1,17 @@
 package com.laboration2.location;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.laboration2.category.Category;
 import com.laboration2.user.User;
 import com.laboration2.utils.Point2DSerializer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.geolatte.geom.C2D;
 import org.geolatte.geom.G2D;
 import org.geolatte.geom.Point;
@@ -28,16 +29,16 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "location")
 public class Location {
 
     @Id
-    @Setter(AccessLevel.NONE)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "location_id", nullable = false)
-    private Long id;
+    private int id;
 
-    @Getter
     @Size(max = 255)
     @Column(name = "location_name")
     private String locationName;
@@ -47,10 +48,12 @@ public class Location {
 
     @Column(name = "last_edit")
     @UpdateTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastModifiedDateTime;
 
     @Column(name = "date_created")
     @CreationTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDateTime;
 
     @Size(max = 255)
@@ -59,18 +62,15 @@ public class Location {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category")
-    @JsonBackReference
+    @JsonBackReference(value = "category-locations")
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    @JsonBackReference
+    @JsonBackReference(value = "user-locations")
     private User user;
 
-    //Importera dependencies, geolatte, hibernate spatial.
-    @JsonSerialize(using = Point2DSerializer.class) // egen definierad klass för serialisering
+    @JsonIgnore
+    @JsonSerialize(using = Point2DSerializer.class)
     private Point<C2D> coordinates;
-
-    // Implementera equals/hashcode. JPA utilities equals/hashcode generator
-    // Find a better way of representing coordinates here. Maybe there is an interface in the hibernate-spatial dependency.
 }

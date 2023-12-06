@@ -2,6 +2,7 @@ package com.laboration2.location;
 
 import com.laboration2.user.UserDto;
 import com.laboration2.utils.LocationMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,53 +11,39 @@ import java.util.Optional;
 @Service
 public class LocationService {
 
-    LocationRepository repository;
-    LocationMapper mapper;
+    private final LocationRepository locationRepository;
 
-    public LocationService(LocationRepository locationRepository, LocationMapper locationMapper){
-        this.repository = locationRepository; this.mapper = locationMapper;
+    @Autowired
+    public LocationService(LocationRepository locationRepository) {
+        this.locationRepository = locationRepository;
     }
 
     public List<Location> getAllLocations() {
-        return repository.findAll();
+        return locationRepository.findAll();
     }
 
-    public Optional<Location> getLocationById(int id) {
-        return repository.findById(id);
+    public Location getLocationById(int id) {
+        Optional<Location> optionalLocation = locationRepository.findById(id);
+        return optionalLocation.orElse(null);
     }
 
-    static Optional<LocationDto> map (Optional<Location> location) {
-        if(location.isEmpty()){
-            return Optional.empty();
+    public Location createLocation(Location location) {
+        // You can add additional validation or business logic here before saving to the repository
+        return locationRepository.save(location);
+    }
+
+    public Location updateLocation(int id, Location location) {
+        if (locationRepository.existsById(id)) {
+            location.setId(id); // Ensure the ID is set for the correct location
+            return locationRepository.save(location);
         }
-        var location1 = location.get();
-        return Optional.of(
-                new LocationDto(
-                    location1.getId(),
-                    location1.getLocationName(),
-                    location1.getVisible(),
-                    location1.getLastModifiedDateTime(),
-                    location1.getCreatedDateTime(),
-                    location1.getDescription(),
-                    location1.getCategory().getName(),
-                    new UserDto(
-                        location1.getUser().getId(),
-                        location1.getUser().getFirstName(),
-                        location1.getUser().getLastName()
-                    )
-                )
-        );
+        return null; // Location with the given ID not found
     }
 
-    public LocationDto createNewLocation(LocationDto locationDto){
-
-        Location newLocation = mapper.convertToEntity(locationDto);
-        // repository.save(newLocation);
-
-        return mapper.convertToDto(newLocation);
+    public void deleteLocation(int id) {
+        locationRepository.deleteById(id);
     }
 }
-
 // Viktigt att swappa longitud och latitud SQL,  har motsatt lagring
 // Ha transactional på add place, för att undvika
 //Har man bara en save så behövs transactional inte egentligen
