@@ -71,4 +71,12 @@ public class LocationService {
 
         return distance <= radius;
     }
+    public List<Location> getLocationsInCategory(Integer categoryId) {
+        if(categoryId == null){
+            throw new IllegalArgumentException("Category id cannot be null");
+        }
+
+        return locationRepository.findByCategory_Id(categoryId);
+
+    }
 }

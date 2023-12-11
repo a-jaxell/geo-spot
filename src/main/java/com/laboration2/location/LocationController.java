@@ -1,14 +1,17 @@
 package com.laboration2.location;
 
+import com.laboration2.category.Category;
 import com.laboration2.utils.LocationMapper;
 import com.vdurmont.emoji.EmojiManager;
 import com.vdurmont.emoji.EmojiParser;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import org.geolatte.geom.C2D;
 import org.geolatte.geom.Point;
 import org.geolatte.geom.Polygon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -64,6 +67,15 @@ public class LocationController {
                                                           @RequestParam double radius
     ){
         return ResponseEntity.ok().body(locationService.nearbyLocations(lat, lng, radius));
+    }
+    @GetMapping(value = "/category/{categoryId}")
+    public ResponseEntity<List<Location>> locationsInCategory(@PathVariable Integer categoryId){
+        List<Location> locations = locationService.getLocationsInCategory(categoryId);
+            if(locations.isEmpty()){
+                return ResponseEntity.notFound().build();
+            }
+
+        return ResponseEntity.ok().body(locations);
     }
 
 }
