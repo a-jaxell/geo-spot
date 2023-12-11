@@ -43,6 +43,10 @@ public class LocationService {
         locationRepository.deleteById(id);
     }
 
+    public List<Location> getLocationsInArea(String polygon){
+        return locationRepository.findWithinPolygon(polygon);
+    }
+
     public List<Location> nearbyLocations(double lat, double lng, double radius) {
 
         return locationRepository.findAll().stream()

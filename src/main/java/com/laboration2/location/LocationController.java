@@ -68,6 +68,10 @@ public class LocationController {
     ){
         return ResponseEntity.ok().body(locationService.nearbyLocations(lat, lng, radius));
     }
+    @PostMapping("/test")
+    public ResponseEntity<List<Location>> nearby(@RequestBody String polygon){
+        return ResponseEntity.ok().body(locationService.getLocationsInArea(polygon));
+    }
     @GetMapping(value = "/category/{categoryId}")
     public ResponseEntity<List<Location>> locationsInCategory(@PathVariable Integer categoryId){
         List<Location> locations = locationService.getLocationsInCategory(categoryId);

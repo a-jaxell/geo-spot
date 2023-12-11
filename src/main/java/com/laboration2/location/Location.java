@@ -62,7 +62,6 @@ public class Location {
     @JsonBackReference(value = "user-locations")
     private User user;
 
-    @JsonIgnore
     @JsonSerialize(using = Point2DSerializer.class)
     private Point<C2D> coordinates;
 }
