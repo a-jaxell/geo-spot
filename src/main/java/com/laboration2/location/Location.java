@@ -13,6 +13,7 @@ import lombok.*;
 import org.geolatte.geom.C2D;
 import org.geolatte.geom.Point;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
 
