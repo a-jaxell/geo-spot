@@ -62,12 +62,12 @@ public class LocationService {
         double locationLat = location.getCoordinates().getPosition().getLat();
         double locationLng = location.getCoordinates().getPosition().getLon();
 
-        double dLat = Math.toRadians(locationLat - targetLat);
-        double dLng = Math.toRadians(locationLng - targetLng);
+        double deltaLat = Math.toRadians(locationLat - targetLat);
+        double deltaLng = Math.toRadians(locationLng - targetLng);
 
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        double a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
                 Math.cos(Math.toRadians(targetLat)) * Math.cos(Math.toRadians(locationLat)) *
-                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+                        Math.sin(deltaLng / 2) * Math.sin(deltaLng / 2);
 
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 

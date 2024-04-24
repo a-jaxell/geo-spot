@@ -42,8 +42,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories/*").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/categories").hasAuthority("ADMIN")
-
                         .requestMatchers(HttpMethod.GET, "/api/locations").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/locations/nearby").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/locations").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/api/locations").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/locations").authenticated()
