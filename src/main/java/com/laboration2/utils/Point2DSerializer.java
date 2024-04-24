@@ -9,18 +9,13 @@ import org.geolatte.geom.Point;
 
 import java.io.IOException;
 
-public class Point2DSerializer extends JsonSerializer<Point<C2D>> {
+public class Point2DSerializer extends JsonSerializer<Point<G2D>> {
 
     @Override
-    public void serialize(Point<C2D> value, JsonGenerator gen, SerializerProvider serializerProvider) throws IOException {
-        //        gen.writeStartArray();
-        //        gen.writeNumber(value.getPosition().getCoordinate(1));
-        //        gen.writeNumber(value.getPosition().getCoordinate(0));
-        //        gen.writeEndArray();
-
+    public void serialize(Point<G2D> value, JsonGenerator gen, SerializerProvider serializerProvider) throws IOException {
         gen.writeStartObject();
-        gen.writeNumberField("lat", value.getPosition().getCoordinate(1));
-        gen.writeNumberField("lng", value.getPosition().getCoordinate(0));
+        gen.writeNumberField("lat", value.getPosition().getLat());
+        gen.writeNumberField("lng", value.getPosition().getLon());
         gen.writeEndObject();
     }
 }

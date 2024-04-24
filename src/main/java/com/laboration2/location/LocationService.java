@@ -59,8 +59,8 @@ public class LocationService {
 
         double earthRadius = 6371; // Earth's radius in kilometers
 
-        double locationLat = location.getCoordinates().getPosition().getY();
-        double locationLng = location.getCoordinates().getPosition().getX();
+        double locationLat = location.getCoordinates().getPosition().getLat();
+        double locationLng = location.getCoordinates().getPosition().getLon();
 
         double dLat = Math.toRadians(locationLat - targetLat);
         double dLng = Math.toRadians(locationLng - targetLng);

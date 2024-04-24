@@ -10,10 +10,9 @@ import com.laboration2.utils.Point2DSerializer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.geolatte.geom.C2D;
+import org.geolatte.geom.G2D;
 import org.geolatte.geom.Point;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
 
@@ -64,5 +63,5 @@ public class Location {
     private User user;
 
     @JsonSerialize(using = Point2DSerializer.class)
-    private Point<C2D> coordinates;
+    private Point<G2D> coordinates;
 }
