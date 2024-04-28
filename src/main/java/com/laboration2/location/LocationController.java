@@ -50,7 +50,7 @@ public class LocationController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/nearby")
+    @GetMapping("/nearby")
     public ResponseEntity<?> nearbyLocations(@RequestParam Double lat, @RequestParam Double lng, @RequestParam Double radius
     ){
         List<Location> locations = locationService.nearbyLocations(lat, lng, radius);
