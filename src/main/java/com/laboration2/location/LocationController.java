@@ -1,68 +1,74 @@
 package com.laboration2.location;
 
-import com.laboration2.utils.LocationMapper;
-import com.vdurmont.emoji.EmojiManager;
-import com.vdurmont.emoji.EmojiParser;
+
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/locations")
 public class LocationController {
 
-    private final LocationService service;
+    private final LocationService locationService;
 
-    public LocationController(LocationService locationService){
-        this.service = locationService;
+    @Autowired
+    public LocationController(LocationService locationService) {
+        this.locationService = locationService;
     }
 
     @GetMapping
-    public List<Location> getAllLocations(){
-        return service.getAllLocations();
+    public ResponseEntity<List<Location>> getAllLocations() {
+        List<Location> locations = locationService.getAllLocations();
+        return new ResponseEntity<>(locations, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/emoji", produces = "application/json")
-    public Boolean emojiTest(){
-        String str = EmojiParser.parseToUnicode(":grinning:");
-        return EmojiManager.isEmoji(str);
+    @GetMapping("/{id}")
+    public ResponseEntity<Location> getLocationById(@PathVariable int id) {
+        Location location = locationService.getLocationById(id);
+        return new ResponseEntity<>(location, HttpStatus.OK);
     }
 
-    @GetMapping("{id}")
-    public Location getLocation(@PathVariable int id){
-        Optional<Location> location = service.getLocationById(id);
-
-        return location.orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found."));
+    @PostMapping(consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Location> createLocation(@RequestBody Location location) {
+        Location createdLocation = locationService.createLocation(location);
+        return new ResponseEntity<>(createdLocation, HttpStatus.CREATED);
     }
 
-    @PostMapping
-    public ResponseEntity<LocationDto> createNewLocation(LocationDto location){
-        // requires login
-       var locationResponse = service.createNewLocation(location);
+    @PutMapping("/{id}")
+    public ResponseEntity<Location> updateLocation(@PathVariable int id, @RequestBody Location location) {
+        Location updatedLocation = locationService.updateLocation(id, location);
+        return new ResponseEntity<>(updatedLocation, HttpStatus.OK);
+    }
 
-       if(locationResponse != null){
-           return ResponseEntity.created(URI.create("/locations/" + locationResponse.id())).build();
-       } else {
-           return ResponseEntity.badRequest().build();
-       }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteLocation(@PathVariable int id) {
+        locationService.deleteLocation(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @PatchMapping
-    public String modifyExistingLocation(){
-        // Modify anything but coordinates on your own locations
-        //Requires login
-        return "Patch a location";
+
+    @GetMapping("/nearby")
+    public ResponseEntity<?> nearbyLocations(@RequestParam Double lat, @RequestParam Double lng, @RequestParam Double radius
+    ){
+        List<Location> locations = locationService.nearbyLocations(lat, lng, radius);
+        return ResponseEntity.ok().body(locations);
     }
-    @DeleteMapping
-    public String deleteLocation() {
-        //Delete one of your own locations
-        // requires login
-        return "Delete an Location";
+    @PostMapping("/test")
+    public ResponseEntity<List<Location>> nearby(@RequestBody String polygon){
+        return ResponseEntity.ok().body(locationService.getLocationsInArea(polygon));
     }
+    @GetMapping(value = "/category/{categoryId}")
+    public ResponseEntity<List<Location>> locationsInCategory(@PathVariable Integer categoryId){
+        List<Location> locations = locationService.getLocationsInCategory(categoryId);
+            if(locations.isEmpty()){
+                return ResponseEntity.notFound().build();
+            }
+
+        return ResponseEntity.ok().body(locations);
+    }
+
 }
 

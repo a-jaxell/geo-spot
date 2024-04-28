@@ -1,6 +1,8 @@
 package com.laboration2.category;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.laboration2.location.Location;
 import com.laboration2.validation.EmojiSymbol;
 import jakarta.persistence.*;
@@ -19,7 +21,6 @@ import java.util.Set;
 public class Category {
 
     @Id
-    @Setter(AccessLevel.NONE)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
@@ -39,7 +40,7 @@ public class Category {
     private String description;
 
     @OneToMany(mappedBy = "category")
-    @JsonIgnore
+    @JsonManagedReference(value = "category-locations")
     private Set<Location> locations = new LinkedHashSet<>();
 
 }
