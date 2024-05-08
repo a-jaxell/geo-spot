@@ -1,13 +1,10 @@
 package com.laboration2.category;
-import com.laboration2.category.dto.CategoryDto;
-import com.laboration2.utils.CategoryMapper;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import com.laboration2.category.dto.CreateCategoryRequest;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+
 @Service
 public class CategoryService {
 
@@ -25,7 +22,17 @@ public class CategoryService {
         return categoryRepository.findById(id).orElse(null);
     }
 
-    public Category createCategory(Category category) {
+    @Transactional
+    public Category createCategory(CreateCategoryRequest dto) {
+        if(categoryRepository.existsByName(dto.getName())) {
+            throw new IllegalArgumentException("Category with name '" +dto.getName()+"' already exists.");
+        }
+        Category category = new Category();
+
+        category.setName(dto.getName());
+        category.setDescription(dto.getDescription());
+        category.setSymbol(dto.getSymbol());
+
         return categoryRepository.save(category);
     }
 

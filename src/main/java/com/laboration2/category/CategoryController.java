@@ -1,5 +1,7 @@
 package com.laboration2.category;
 
+import com.laboration2.category.dto.CreateCategoryRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,14 +26,21 @@ public class CategoryController {
         return categoryService.getCategoryById(id);
     }
 
-    @PostMapping
-    public Category createCategory(@RequestBody Category category) {
-        return categoryService.createCategory(category);
+    @PostMapping()
+    public ResponseEntity<?> createCategory(@RequestBody CreateCategoryRequest category) {
+        System.out.println("Received category: " + category.getName()); // Debug print
+        try {
+            Category savedCategory = categoryService.createCategory(category);
+            return ResponseEntity.ok(savedCategory);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    public Category updateCategory(@PathVariable Long id, @RequestBody Category category) {
-        return categoryService.updateCategory(id, category);
+    public void updateCategory(@PathVariable Long id, CreateCategoryRequest category) {
+        System.out.println(category);
+        //return categoryService.updateCategory(id, category);
     }
 
     @DeleteMapping("/{id}")
