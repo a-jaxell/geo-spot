@@ -1,6 +1,9 @@
 package com.laboration2.location;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +21,14 @@ public class LocationService {
     }
 
     public List<Location> getAllLocations() {
-        return locationRepository.findAll();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = null;
+        List<Location> locations = locationRepository.findByVisibleTrue();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
+            username = userDetails.getUsername();
+            locations.addAll(locationRepository.findByVisibleFalseAndUserFirstNameEquals(username));
+        }
+        return locations;
     }
 
     public Location getLocationById(int id) {
