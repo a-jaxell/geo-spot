@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -23,31 +25,39 @@ public class LocationController {
     @GetMapping
     public ResponseEntity<List<Location>> getAllLocations() {
         List<Location> locations = locationService.getAllLocations();
-        return new ResponseEntity<>(locations, HttpStatus.OK);
+        return ResponseEntity.ok(locations);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Location> getLocationById(@PathVariable int id) {
         Location location = locationService.getLocationById(id);
-        return new ResponseEntity<>(location, HttpStatus.OK);
+        return ResponseEntity.ok(location);
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<Location> createLocation(@RequestBody Location location) {
         Location createdLocation = locationService.createLocation(location);
-        return new ResponseEntity<>(createdLocation, HttpStatus.CREATED);
+        URI locationURI = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .buildAndExpand(createdLocation.getId())
+                .toUri();
+        return ResponseEntity.created(locationURI).body(createdLocation);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Location> updateLocation(@PathVariable int id, @RequestBody Location location) {
         Location updatedLocation = locationService.updateLocation(id, location);
-        return new ResponseEntity<>(updatedLocation, HttpStatus.OK);
+        URI locationURI = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .buildAndExpand(updatedLocation.getId())
+                .toUri();
+        return ResponseEntity.created(locationURI).body(updatedLocation);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLocation(@PathVariable int id) {
         locationService.deleteLocation(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return (ResponseEntity<Void>) ResponseEntity.noContent();
     }
 
     @GetMapping("/nearby")
