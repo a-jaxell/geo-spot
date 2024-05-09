@@ -9,7 +9,6 @@ import java.util.List;
 
 @Repository
 public interface LocationRepository extends ListCrudRepository<Location, Integer> {
-    List<Location> findByCategory_Id(Integer category_id);
 
     @Query("SELECT l FROM Location l WHERE ST_Within(l.coordinates, ST_GeomFromText(:polygon, 4326)) = true")
     List<Location> findWithinPolygon(String polygon);
@@ -17,6 +16,7 @@ public interface LocationRepository extends ListCrudRepository<Location, Integer
     List<Location> findByVisibleTrue();
 
     Collection<? extends Location> findByVisibleFalseAndUserFirstNameEquals(String username);
+
+    List<Location> findByVisibleTrueAndCategoryIdEquals(Long categoryId);
 }
-// List<Place> findPlacesByUserId(string userId);
 //Entitygraph använder vi om vi har fetchType LAZY på en @ManyToOne relation

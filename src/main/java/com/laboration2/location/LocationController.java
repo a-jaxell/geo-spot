@@ -71,7 +71,7 @@ public class LocationController {
         return ResponseEntity.ok().body(locationService.getLocationsInArea(polygon));
     }
     @GetMapping(value = "/category/{categoryId}")
-    public ResponseEntity<List<Location>> locationsInCategory(@PathVariable Integer categoryId){
+    public ResponseEntity<List<Location>> locationsInCategory(@PathVariable Long categoryId){
         List<Location> locations = locationService.getLocationsInCategory(categoryId);
             if(locations.isEmpty()){
                 return ResponseEntity.notFound().build();
