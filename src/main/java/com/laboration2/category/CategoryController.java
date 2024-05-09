@@ -14,9 +14,12 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
+    private final CategoryRepository categoryRepository;
 
-    public CategoryController(CategoryService categoryService) {
+    public CategoryController(CategoryService categoryService,
+                              CategoryRepository categoryRepository) {
         this.categoryService = categoryService;
+        this.categoryRepository = categoryRepository;
     }
 
     @GetMapping

@@ -35,15 +35,6 @@ public class CategoryService {
 
         return categoryRepository.save(category);
     }
-
-    public Category updateCategory(Long id, Category category) {
-        if (categoryRepository.existsById(id)) {
-            category.setId(id);
-            return categoryRepository.save(category);
-        }
-        return null; // Handle not found scenario
-    }
-
     public void deleteCategory(Long id) {
         categoryRepository.deleteById(id);
     }
