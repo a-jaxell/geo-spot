@@ -17,6 +17,8 @@ import java.nio.charset.StandardCharsets;
 @Configuration
 public class WebConfig {
 
+    //This is for DEBUGGING only
+    /*
     @Bean
     public CommonsRequestLoggingFilter requestLoggingFilter() {
         CommonsRequestLoggingFilter loggingFilter = new CommonsRequestLoggingFilter();
@@ -32,6 +34,8 @@ public class WebConfig {
         OncePerRequestFilter filter = new OncePerRequestFilter() {
             @Override
             protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+            // The stream here causes the Request Body to become consumed. Ie a stream can only be read once.
+            //  .readAllBytes() consumes all data and leaves nothing for Springs dispatcher servlet.
                 String body = new String(request.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
                 System.out.println("Direct request body logging: " + body);
                 filterChain.doFilter(request, response);
@@ -41,4 +45,5 @@ public class WebConfig {
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return registrationBean;
     }
+    */
 }
