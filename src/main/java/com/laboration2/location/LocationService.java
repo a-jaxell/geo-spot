@@ -1,5 +1,10 @@
 package com.laboration2.location;
 
+import com.laboration2.category.Category;
+import com.laboration2.category.CategoryRepository;
+import com.laboration2.user.User;
+import com.laboration2.user.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,10 +19,15 @@ import java.util.stream.Collectors;
 public class LocationService {
 
     private final LocationRepository locationRepository;
+    private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public LocationService(LocationRepository locationRepository) {
+    public LocationService(LocationRepository locationRepository,
+                           CategoryRepository categoryRepository, UserRepository userRepository) {
         this.locationRepository = locationRepository;
+        this.categoryRepository = categoryRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Location> getAllLocations() {
@@ -36,8 +46,29 @@ public class LocationService {
         return optionalLocation.orElse(null);
     }
 
-    public Location createLocation(Location location) {
-        // You can add additional validation or business logic here before saving to the repository
+    @Transactional
+    public Location createLocation(LocationDto dto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = null;
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
+            String username = userDetails.getUsername();
+            user = (User) userRepository.findByFirstName(username)
+                    .orElseThrow(()-> new IllegalArgumentException("No user found."));
+        } else {
+            throw new IllegalStateException("No authenticated user found.");
+        }
+        Category category = categoryRepository.findById(dto.categoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Category id '"+dto.categoryId()+"' does not exist.")
+                );
+
+        Location location = new Location();
+        location.setUser(user);
+        location.setCategory(category);
+        location.setLocationName(dto.locationName());
+        location.setDescription(dto.description());
+        location.setCoordinates(dto.coordinates());
+        location.setVisible(dto.visible());
+
         return locationRepository.save(location);
     }
 

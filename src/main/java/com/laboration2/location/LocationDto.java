@@ -1,16 +1,31 @@
 package com.laboration2.location;
 
-import com.laboration2.user.UserDto;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.laboration2.utils.Point2DDeserializer;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.geolatte.geom.G2D;
+import org.geolatte.geom.Point;
 
 import java.io.Serializable;
-import java.time.Instant;
-import java.time.LocalDateTime;
-
 /**
  * DTO for {@link Location}
  */
-public record LocationDto(Long id, @Size(max = 255) String locationName, Boolean visible, LocalDateTime lastEdit,
-                          LocalDateTime dateCreated, @Size(max = 255) String description, String categoryName,
-                          UserDto user) implements Serializable {
+
+public record LocationDto(@NotBlank @Size(max = 255) String locationName, Boolean visible,
+                          @Size(max = 255) String description, @NotNull Long categoryId,
+                           @NotNull @JsonDeserialize(using = Point2DDeserializer.class) Point<G2D> coordinates) implements Serializable {
+    /**
+     * Factory method to handle setting of default values.
+     * If a locations visible status isnt set, it will default to true.
+     */
+    public static LocationDto of(@NotBlank @Size(max = 255) String locationName, Boolean visible,
+                                 @Size(max = 255) String description, @NotNull Long categoryId,
+                                    @NotNull @JsonDeserialize(using = Point2DDeserializer.class) Point<G2D> coordinates){
+    if(visible == null){
+        visible = true;
+    }
+    return new LocationDto(locationName, visible, description, categoryId, coordinates);
+    }
 }

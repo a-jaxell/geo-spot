@@ -35,7 +35,7 @@ public class LocationController {
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Location> createLocation(@RequestBody Location location) {
+    public ResponseEntity<Location> createLocation(@Valid @RequestBody LocationDto location) {
         Location createdLocation = locationService.createLocation(location);
         URI locationURI = ServletUriComponentsBuilder
                 .fromCurrentRequest()
