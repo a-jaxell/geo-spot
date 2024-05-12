@@ -4,6 +4,7 @@ import com.laboration2.category.Category;
 import com.laboration2.category.CategoryRepository;
 import com.laboration2.exception.NotAuthenticatedException;
 import com.laboration2.exception.ResourceNotFoundException;
+import com.laboration2.location.dto.LocationDto;
 import com.laboration2.location.dto.LocationUpdateDto;
 import com.laboration2.user.User;
 import com.laboration2.user.UserRepository;

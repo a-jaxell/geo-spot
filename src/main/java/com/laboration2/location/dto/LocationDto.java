@@ -1,6 +1,7 @@
-package com.laboration2.location;
+package com.laboration2.location.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.laboration2.location.Location;
 import com.laboration2.utils.Point2DDeserializer;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

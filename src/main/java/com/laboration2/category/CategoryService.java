@@ -1,12 +1,14 @@
 package com.laboration2.category;
 
 import com.laboration2.category.dto.CreateCategoryRequest;
+import com.laboration2.category.dto.UpdateCategoryDto;
 import com.laboration2.exception.ResourceAlreadyExistsException;
 import com.laboration2.exception.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryService {
@@ -39,8 +41,23 @@ public class CategoryService {
 
         return categoryRepository.save(category);
     }
+    @Transactional
+    public Category updateCategory(Long id, UpdateCategoryDto dto) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category with id '" + id + "' does not exist."));
 
-    public void deleteCategory(Long id) {
-        categoryRepository.deleteById(id);
+        Optional.ofNullable(dto.name()).ifPresent(category::setName);
+        Optional.ofNullable(dto.symbol()).ifPresent(category::setSymbol);
+        Optional.ofNullable(dto.description()).ifPresent(category::setDescription);
+
+        return categoryRepository.save(category);
+    }
+
+    @Transactional
+    public void deleteCategory(Integer id) {
+        int deleted = categoryRepository.deleteById(id);
+        if (deleted == 0) {
+            throw new ResourceNotFoundException("Unable to delete Location with id '" + id + "'");
+        }
     }
 }

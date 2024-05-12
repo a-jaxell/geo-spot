@@ -1,8 +1,10 @@
 package com.laboration2.category;
 
 import com.laboration2.category.dto.CreateCategoryRequest;
+import com.laboration2.category.dto.UpdateCategoryDto;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -14,12 +16,9 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
-    private final CategoryRepository categoryRepository;
 
-    public CategoryController(CategoryService categoryService,
-                              CategoryRepository categoryRepository) {
+    public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
-        this.categoryRepository = categoryRepository;
     }
 
     @GetMapping
@@ -49,14 +48,16 @@ public class CategoryController {
         }
     }
 
+    @RolesAllowed("ADMIN")
     @PutMapping("/{id}")
-    public void updateCategory(@PathVariable Long id, CreateCategoryRequest category) {
-        System.out.println(category);
-        //return categoryService.updateCategory(id, category);
+    public Category updateCategory(@PathVariable Long id, UpdateCategoryDto category) {
+        return categoryService.updateCategory(id, category);
     }
 
+    @RolesAllowed("ADMIN")
     @DeleteMapping("/{id}")
-    public void deleteCategory(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCategory(@PathVariable Integer id) {
         categoryService.deleteCategory(id);
+        return ResponseEntity.noContent().build();
     }
 }
