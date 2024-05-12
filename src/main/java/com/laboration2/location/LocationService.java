@@ -35,7 +35,7 @@ public class LocationService {
 
     public List<Location> getAllLocations() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = null;
+        String username;
         List<Location> locations = locationRepository.findByVisibleTrue();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
             username = userDetails.getUsername();
@@ -52,7 +52,7 @@ public class LocationService {
     @Transactional
     public Location createLocation(LocationDto dto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = null;
+        User user;
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
             String username = userDetails.getUsername();
             user = (User) userRepository.findByFirstName(username)
@@ -90,7 +90,7 @@ public class LocationService {
     @Transactional
     public void deleteLocation(int id) throws IllegalArgumentException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = null;
+        User user;
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
             String username = userDetails.getUsername();
             user = (User) userRepository.findByFirstName(username)

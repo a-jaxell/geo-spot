@@ -4,7 +4,6 @@ import com.laboration2.category.dto.CreateCategoryRequest;
 import com.laboration2.category.dto.UpdateCategoryDto;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
