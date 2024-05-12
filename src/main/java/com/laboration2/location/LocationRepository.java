@@ -14,6 +14,10 @@ public interface LocationRepository extends ListCrudRepository<Location, Integer
     @Query("SELECT l FROM Location l WHERE ST_Within(l.coordinates, ST_GeomFromText(:polygon, 4326)) = true")
     List<Location> findWithinPolygon(String polygon);
 
+
+    @Query("SELECT l FROM Location l WHERE ST_Distance_Sphere(l.coordinates, ST_GeomFromText(CONCAT('POINT(', ?1, ' ', ?2, ')'), 4326)) <= ?3")
+    List<Location> findLocationsWithinDistance(double lat, double lng, double rad);
+
     List<Location> findByVisibleTrue();
 
     Collection<? extends Location> findByVisibleFalseAndUserFirstNameEquals(String username);

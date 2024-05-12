@@ -6,6 +6,7 @@ import com.laboration2.location.dto.LocationUpdateDto;
 import com.laboration2.user.User;
 import com.laboration2.user.UserRepository;
 import jakarta.transaction.Transactional;
+import org.geolatte.geom.G2D;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -106,13 +107,8 @@ public class LocationService {
         return locationRepository.findWithinPolygon(polygon);
     }
 
-    public List<Location> nearbyLocations(double lat, double lng, double radius) {
-
-        return locationRepository.findAll().stream()
-                .filter(location ->
-                        isLocationWithinRadius(location, lat, lng, radius))
-                                .collect(Collectors.toList());
-
+    public List<Location> getLocationsWithinSphere(double lat, double lng, double radius) {
+        return locationRepository.findLocationsWithinDistance(lat, lng, radius);
     }
     private boolean isLocationWithinRadius(Location location, double targetLat, double targetLng, double radius){
 
@@ -138,8 +134,6 @@ public class LocationService {
         if(categoryId == null){
             throw new IllegalArgumentException("Category id cannot be null");
         }
-
         return locationRepository.findByVisibleTrueAndCategoryIdEquals(categoryId);
-
     }
 }
