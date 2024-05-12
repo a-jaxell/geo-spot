@@ -2,6 +2,7 @@ package com.laboration2.location;
 
 import com.laboration2.category.Category;
 import com.laboration2.category.CategoryRepository;
+import com.laboration2.location.dto.LocationUpdateDto;
 import com.laboration2.user.User;
 import com.laboration2.user.UserRepository;
 import jakarta.transaction.Transactional;
@@ -41,9 +42,9 @@ public class LocationService {
         return locations;
     }
 
-    public Location getLocationById(int id) {
-        Optional<Location> optionalLocation = locationRepository.findById(id);
-        return optionalLocation.orElse(null);
+    public Location getLocationById(Integer id) {
+        return locationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("There is no location with id '"+id+"'"));
     }
 
     @Transactional
@@ -72,13 +73,17 @@ public class LocationService {
         return locationRepository.save(location);
     }
 
-    public Location updateLocation(int id, Location location) {
-        if (locationRepository.existsById(id)) {
-            location.setId(id); // Ensure the ID is set for the correct location
+    @Transactional
+    public Location updateLocation(Integer id, LocationUpdateDto dto) {
+            Location location = locationRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Location does not exist."));
+
+            Optional.ofNullable(dto.locationName()).ifPresent(location::setLocationName);
+            Optional.ofNullable(dto.visible()).ifPresent(location::setVisible);
+            Optional.ofNullable(dto.description()).ifPresent(location::setDescription);
+
             return locationRepository.save(location);
-        }
-        return null; // Location with the given ID not found
-    }
+    }       /// test method and have it run on /location/id endpoint and make id a path variable
 
     public void deleteLocation(int id) {
         locationRepository.deleteById(id);

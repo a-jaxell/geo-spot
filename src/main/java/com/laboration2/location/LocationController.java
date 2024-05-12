@@ -1,6 +1,7 @@
 package com.laboration2.location;
 
 
+import com.laboration2.location.dto.LocationUpdateDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,7 +46,7 @@ public class LocationController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Location> updateLocation(@PathVariable int id, @RequestBody Location location) {
+    public ResponseEntity<Location> updateLocation(@PathVariable int id, @RequestBody LocationUpdateDto location) {
         Location updatedLocation = locationService.updateLocation(id, location);
         URI locationURI = ServletUriComponentsBuilder
                 .fromCurrentRequest()

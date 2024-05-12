@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface LocationRepository extends ListCrudRepository<Location, Integer> {
@@ -18,5 +19,7 @@ public interface LocationRepository extends ListCrudRepository<Location, Integer
     Collection<? extends Location> findByVisibleFalseAndUserFirstNameEquals(String username);
 
     List<Location> findByVisibleTrueAndCategoryIdEquals(Long categoryId);
+
+    Optional<Location> findById(Integer id);
 }
 //Entitygraph använder vi om vi har fetchType LAZY på en @ManyToOne relation
