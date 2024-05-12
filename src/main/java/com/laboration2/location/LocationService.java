@@ -2,6 +2,8 @@ package com.laboration2.location;
 
 import com.laboration2.category.Category;
 import com.laboration2.category.CategoryRepository;
+import com.laboration2.exception.NotAuthenticatedException;
+import com.laboration2.exception.ResourceNotFoundException;
 import com.laboration2.location.dto.LocationUpdateDto;
 import com.laboration2.user.User;
 import com.laboration2.user.UserRepository;
@@ -42,8 +44,8 @@ public class LocationService {
     }
 
     public Location getLocationById(Integer id) {
-        return locationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("There is no location with id '" + id + "'"));
+        return locationRepository.findByIdAndVisibleTrue(id)
+                .orElseThrow(() -> new ResourceNotFoundException("There is no location with id '" + id + "'"));
     }
 
     @Transactional
@@ -53,12 +55,12 @@ public class LocationService {
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
             String username = userDetails.getUsername();
             user = (User) userRepository.findByFirstName(username)
-                    .orElseThrow(() -> new IllegalArgumentException("No user found."));
+                    .orElseThrow(() -> new ResourceNotFoundException("No user found."));
         } else {
-            throw new IllegalStateException("No authenticated user found.");
+            throw new NotAuthenticatedException("No authenticated user found.");
         }
         Category category = categoryRepository.findById(dto.categoryId())
-                .orElseThrow(() -> new IllegalArgumentException("Category id '" + dto.categoryId() + "' does not exist.")
+                .orElseThrow(() -> new ResourceNotFoundException("Category id '" + dto.categoryId() + "' does not exist.")
                 );
 
         Location location = new Location();
@@ -75,14 +77,14 @@ public class LocationService {
     @Transactional
     public Location updateLocation(Integer id, LocationUpdateDto dto) {
         Location location = locationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Location does not exist."));
+                .orElseThrow(() -> new ResourceNotFoundException("Location does not exist."));
 
         Optional.ofNullable(dto.locationName()).ifPresent(location::setLocationName);
         Optional.ofNullable(dto.visible()).ifPresent(location::setVisible);
         Optional.ofNullable(dto.description()).ifPresent(location::setDescription);
 
         return locationRepository.save(location);
-    }       /// test method and have it run on /location/id endpoint and make id a path variable
+    }
 
     @Transactional
     public void deleteLocation(int id) throws IllegalArgumentException {
@@ -91,13 +93,13 @@ public class LocationService {
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
             String username = userDetails.getUsername();
             user = (User) userRepository.findByFirstName(username)
-                    .orElseThrow(() -> new IllegalArgumentException("No user found."));
+                    .orElseThrow(() -> new ResourceNotFoundException("Username not found."));
         } else {
-            throw new IllegalStateException("No authenticated user found.");
+            throw new NotAuthenticatedException("No authenticated user found.");
         }
         int deleted = locationRepository.deleteByIdAndUserId(id, user.getId());
         if (deleted == 0) {
-            throw new IllegalArgumentException("Unable to delete Location with id '" + id + "'");
+            throw new ResourceNotFoundException("Unable to delete Location with id '" + id + "'");
         }
     }
 
@@ -107,27 +109,6 @@ public class LocationService {
 
     public List<Location> getLocationsWithinSphere(double lat, double lng, double radius) {
         return locationRepository.findLocationsWithinDistance(lat, lng, radius);
-    }
-
-    private boolean isLocationWithinRadius(Location location, double targetLat, double targetLng, double radius) {
-
-        double earthRadius = 6371; // Earth's radius in kilometers
-
-        double locationLat = location.getCoordinates().getPosition().getLat();
-        double locationLng = location.getCoordinates().getPosition().getLon();
-
-        double deltaLat = Math.toRadians(locationLat - targetLat);
-        double deltaLng = Math.toRadians(locationLng - targetLng);
-
-        double a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
-                Math.cos(Math.toRadians(targetLat)) * Math.cos(Math.toRadians(locationLat)) *
-                        Math.sin(deltaLng / 2) * Math.sin(deltaLng / 2);
-
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-        double distance = earthRadius * c;
-
-        return distance <= radius;
     }
 
     public List<Location> getLocationsInCategory(Long categoryId) {

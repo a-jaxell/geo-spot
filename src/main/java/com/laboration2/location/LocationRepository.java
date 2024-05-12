@@ -26,5 +26,7 @@ public interface LocationRepository extends ListCrudRepository<Location, Integer
     Optional<Location> findById(Integer id);
 
     int deleteByIdAndUserId(int id, Long id1);
+
+    Optional<Location> findByIdAndVisibleTrue(Integer id);
 }
 //Entitygraph använder vi om vi har fetchType LAZY på en @ManyToOne relation

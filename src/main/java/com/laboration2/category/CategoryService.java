@@ -1,6 +1,8 @@
 package com.laboration2.category;
 
 import com.laboration2.category.dto.CreateCategoryRequest;
+import com.laboration2.exception.ResourceAlreadyExistsException;
+import com.laboration2.exception.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +22,14 @@ public class CategoryService {
     }
 
     public Category getCategoryById(Long id) {
-        return categoryRepository.findById(id).orElse(null);
+        return categoryRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException("Category with id '" + id + "' does not exist."));
     }
 
     @Transactional
     public Category createCategory(CreateCategoryRequest dto) {
         if (categoryRepository.existsByName(dto.getName())) {
-            throw new IllegalArgumentException("Category with name '" + dto.getName() + "' already exists.");
+            throw new ResourceAlreadyExistsException("Category with name '" + dto.getName() + "' already exists.");
         }
         Category category = new Category();
 

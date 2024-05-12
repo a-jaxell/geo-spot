@@ -5,6 +5,7 @@ import com.laboration2.location.dto.LocationUpdateDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -45,7 +46,7 @@ public class LocationController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Location> updateLocation(@PathVariable int id, @RequestBody LocationUpdateDto location) {
+    public ResponseEntity<Location> updateLocation(@PathVariable int id, @Valid @RequestBody LocationUpdateDto location) {
         Location updatedLocation = locationService.updateLocation(id, location);
         URI locationURI = ServletUriComponentsBuilder
                 .fromCurrentRequest()
