@@ -45,7 +45,7 @@ public class LocationController {
         return ResponseEntity.created(locationURI).body(createdLocation);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<Location> updateLocation(@PathVariable int id, @RequestBody LocationUpdateDto location) {
         Location updatedLocation = locationService.updateLocation(id, location);
         URI locationURI = ServletUriComponentsBuilder
