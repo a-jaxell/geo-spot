@@ -10,6 +10,8 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD})
 public @interface EmojiSymbol {
     String message() default "Invalid Emoji";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

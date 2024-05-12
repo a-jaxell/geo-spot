@@ -2,19 +2,22 @@ package com.laboration2.location;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.laboration2.category.Category;
 import com.laboration2.user.User;
+import com.laboration2.utils.Point2DDeserializer;
 import com.laboration2.utils.Point2DSerializer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.geolatte.geom.G2D;
 import org.geolatte.geom.Point;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 
 import java.time.LocalDateTime;
 
@@ -63,5 +66,6 @@ public class Location {
     private User user;
 
     @JsonSerialize(using = Point2DSerializer.class)
+    @JsonDeserialize(using = Point2DDeserializer.class)
     private Point<G2D> coordinates;
 }

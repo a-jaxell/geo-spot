@@ -1,28 +1,23 @@
-### GeoSpot - REST API for locations of interest
+# GeoSpot - REST API for locations of interest
 
-This was developed using Spring Boot and the Spring packages
-    
-- Spring Web
-- Spring Security
-- Spring Data JPA
-- MySQL Driver Validation
-- Spring Boot Actuator
+This was a school assignment to practice making a REST API using Spring Boot.
 
 
-## Running the project
+# Installing the project
 
     Clone onto your computer using 
 
     ``git clone...``
 
-    This requires a MySQL database to run. Preferrably run one with docker
+    Preferrably run this in an IDE like IntelliJ idea. 
 
-    ``docker run command here --- ``
+## Database
 
-    For Authentication this requires a KeyCloak server. Preferrably run one with docker
-    
-    ``docker run command with ENV variables``
+    This project was developed using a MySql version 8.2
+    This requires a MySQL database to run. Preferrably run one with docker.
 
+    ``docker run --name <mysql-container> -e MYSQL_ROOT_PASSWORD=<rootpassword> -p 3306:3306 -d mysql``
 
+## API Documentation
 
-### API Documentation
+Api documentation is available with the help of Postman [here](https://documenter.getpostman.com/view/27170679/2sA3JNaLBr)

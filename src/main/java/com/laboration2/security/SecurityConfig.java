@@ -1,6 +1,5 @@
 package com.laboration2.security;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -8,51 +7,70 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtDecoders;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
-@EnableMethodSecurity
+@EnableMethodSecurity(
+        jsr250Enabled = true
+)
 public class SecurityConfig {
 
-    @Value("${JWT_ISSUER_URI}")
-    private String issuerUri;
     @Bean
-    protected JwtDecoder jwtDecoder(){
-        return JwtDecoders.fromIssuerLocation(issuerUri);
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.GET, "/error").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/locations").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/locations/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/categories/*").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/**").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/api/locations/*").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/locations/*").authenticated()
+                        .anyRequest().denyAll()
+                )
+                .httpBasic(withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers
+                        .httpStrictTransportSecurity(Customizer.withDefaults())
+                        .xssProtection(Customizer.withDefaults())
+                        .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'"))
+                );
+        return http.build();
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        JwtAuthenticationConverter jwtConverter = new JwtAuthenticationConverter();
-        jwtConverter.setJwtGrantedAuthoritiesConverter(new CustomJwtConverter());
+    public UserDetailsService userDetailsService() {
+        // Create an encoder with default settings
+        PasswordEncoder encoder = passwordEncoder();
 
-
-        return http
-                .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt
-                                .jwtAuthenticationConverter(jwtConverter)
-                        )
-                )
-                //Customizer.withDefaults()
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/categories/*").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/api/categories").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/locations").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/locations/nearby").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/locations").authenticated()
-                        .requestMatchers(HttpMethod.PATCH, "/api/locations").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/api/locations").authenticated()
-
-                        .requestMatchers(HttpMethod.GET, "/api/locations/*").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/api/locations/nearby").permitAll()
-
-                        .anyRequest().denyAll()
-                )
+        // Create an in-memory user store with two users
+        UserDetails admin = User.builder()
+                .username("admin")
+                .password(encoder.encode("adminpass"))
+                .roles("ADMIN")  // Role ADMIN
                 .build();
+
+        UserDetails user = User.builder()
+                .username("user")
+                .password(encoder.encode("userpass"))
+                .roles("USER")  // Role USER
+                .build();
+
+        // Return a manager for the in-memory store
+        return new InMemoryUserDetailsManager(admin, user);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
