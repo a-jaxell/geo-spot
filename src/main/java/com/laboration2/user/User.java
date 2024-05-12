@@ -1,6 +1,5 @@
 package com.laboration2.user;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.laboration2.location.Location;
 import jakarta.persistence.*;

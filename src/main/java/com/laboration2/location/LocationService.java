@@ -6,7 +6,6 @@ import com.laboration2.location.dto.LocationUpdateDto;
 import com.laboration2.user.User;
 import com.laboration2.user.UserRepository;
 import jakarta.transaction.Transactional;
-import org.geolatte.geom.G2D;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class LocationService {
@@ -45,7 +43,7 @@ public class LocationService {
 
     public Location getLocationById(Integer id) {
         return locationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("There is no location with id '"+id+"'"));
+                .orElseThrow(() -> new IllegalArgumentException("There is no location with id '" + id + "'"));
     }
 
     @Transactional
@@ -55,12 +53,12 @@ public class LocationService {
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
             String username = userDetails.getUsername();
             user = (User) userRepository.findByFirstName(username)
-                    .orElseThrow(()-> new IllegalArgumentException("No user found."));
+                    .orElseThrow(() -> new IllegalArgumentException("No user found."));
         } else {
             throw new IllegalStateException("No authenticated user found.");
         }
         Category category = categoryRepository.findById(dto.categoryId())
-                .orElseThrow(() -> new IllegalArgumentException("Category id '"+dto.categoryId()+"' does not exist.")
+                .orElseThrow(() -> new IllegalArgumentException("Category id '" + dto.categoryId() + "' does not exist.")
                 );
 
         Location location = new Location();
@@ -76,14 +74,14 @@ public class LocationService {
 
     @Transactional
     public Location updateLocation(Integer id, LocationUpdateDto dto) {
-            Location location = locationRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Location does not exist."));
+        Location location = locationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Location does not exist."));
 
-            Optional.ofNullable(dto.locationName()).ifPresent(location::setLocationName);
-            Optional.ofNullable(dto.visible()).ifPresent(location::setVisible);
-            Optional.ofNullable(dto.description()).ifPresent(location::setDescription);
+        Optional.ofNullable(dto.locationName()).ifPresent(location::setLocationName);
+        Optional.ofNullable(dto.visible()).ifPresent(location::setVisible);
+        Optional.ofNullable(dto.description()).ifPresent(location::setDescription);
 
-            return locationRepository.save(location);
+        return locationRepository.save(location);
     }       /// test method and have it run on /location/id endpoint and make id a path variable
 
     @Transactional
@@ -93,24 +91,25 @@ public class LocationService {
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
             String username = userDetails.getUsername();
             user = (User) userRepository.findByFirstName(username)
-                    .orElseThrow(()-> new IllegalArgumentException("No user found."));
+                    .orElseThrow(() -> new IllegalArgumentException("No user found."));
         } else {
             throw new IllegalStateException("No authenticated user found.");
         }
-        int deleted = locationRepository.deleteByIdAndUserId(id,user.getId());
-        if(deleted == 0){
-            throw new IllegalArgumentException("Unable to delete Location with id '"+id+"'");
+        int deleted = locationRepository.deleteByIdAndUserId(id, user.getId());
+        if (deleted == 0) {
+            throw new IllegalArgumentException("Unable to delete Location with id '" + id + "'");
         }
     }
 
-    public List<Location> getLocationsInArea(String polygon){
+    public List<Location> getLocationsInArea(String polygon) {
         return locationRepository.findWithinPolygon(polygon);
     }
 
     public List<Location> getLocationsWithinSphere(double lat, double lng, double radius) {
         return locationRepository.findLocationsWithinDistance(lat, lng, radius);
     }
-    private boolean isLocationWithinRadius(Location location, double targetLat, double targetLng, double radius){
+
+    private boolean isLocationWithinRadius(Location location, double targetLat, double targetLng, double radius) {
 
         double earthRadius = 6371; // Earth's radius in kilometers
 
@@ -130,8 +129,9 @@ public class LocationService {
 
         return distance <= radius;
     }
+
     public List<Location> getLocationsInCategory(Long categoryId) {
-        if(categoryId == null){
+        if (categoryId == null) {
             throw new IllegalArgumentException("Category id cannot be null");
         }
         return locationRepository.findByVisibleTrueAndCategoryIdEquals(categoryId);

@@ -3,10 +3,7 @@ package com.laboration2.location;
 
 import com.laboration2.location.dto.LocationUpdateDto;
 import jakarta.validation.Valid;
-import org.geolatte.geom.G2D;
-import org.geolatte.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -65,16 +62,17 @@ public class LocationController {
 
     @GetMapping("/nearby")
     public ResponseEntity<?> locationsWithinDistance(@RequestParam Double lat, @RequestParam Double lng, @RequestParam Double radius
-    ){
+    ) {
         List<Location> locations = locationService.getLocationsWithinSphere(lat, lng, radius);
         return ResponseEntity.ok(locations);
     }
+
     @GetMapping(value = "/category/{categoryId}")
-    public ResponseEntity<List<Location>> locationsInCategory(@PathVariable Long categoryId){
+    public ResponseEntity<List<Location>> locationsInCategory(@PathVariable Long categoryId) {
         List<Location> locations = locationService.getLocationsInCategory(categoryId);
-            if(locations.isEmpty()){
-                return ResponseEntity.notFound().build();
-            }
+        if (locations.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(locations);
     }
 }

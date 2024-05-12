@@ -1,4 +1,5 @@
 package com.laboration2.category;
+
 import com.laboration2.category.dto.CreateCategoryRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,8 @@ public class CategoryService {
 
     @Transactional
     public Category createCategory(CreateCategoryRequest dto) {
-        if(categoryRepository.existsByName(dto.getName())) {
-            throw new IllegalArgumentException("Category with name '" +dto.getName()+"' already exists.");
+        if (categoryRepository.existsByName(dto.getName())) {
+            throw new IllegalArgumentException("Category with name '" + dto.getName() + "' already exists.");
         }
         Category category = new Category();
 
@@ -35,6 +36,7 @@ public class CategoryService {
 
         return categoryRepository.save(category);
     }
+
     public void deleteCategory(Long id) {
         categoryRepository.deleteById(id);
     }

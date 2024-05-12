@@ -24,8 +24,8 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-         http
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.GET, "/error").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/locations").permitAll()
@@ -33,15 +33,16 @@ public class SecurityConfig {
                         .requestMatchers("/api/locations/**").authenticated()
                         .anyRequest().authenticated()
                 )
-                 .httpBasic(withDefaults())
-                 .csrf(AbstractHttpConfigurer::disable)
-                 .headers( headers -> headers
-                         .httpStrictTransportSecurity(Customizer.withDefaults())
-                         .xssProtection(Customizer.withDefaults())
-                         .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'"))
-                 );
+                .httpBasic(withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers
+                        .httpStrictTransportSecurity(Customizer.withDefaults())
+                        .xssProtection(Customizer.withDefaults())
+                        .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'"))
+                );
         return http.build();
     }
+
     @Bean
     public UserDetailsService userDetailsService() {
         // Create an encoder with default settings
@@ -63,6 +64,7 @@ public class SecurityConfig {
         // Return a manager for the in-memory store
         return new InMemoryUserDetailsManager(admin, user);
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
