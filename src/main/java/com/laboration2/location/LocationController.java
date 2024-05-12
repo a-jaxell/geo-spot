@@ -58,7 +58,7 @@ public class LocationController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLocation(@PathVariable int id) {
         locationService.deleteLocation(id);
-        return (ResponseEntity<Void>) ResponseEntity.noContent();
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/nearby")

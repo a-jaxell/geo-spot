@@ -85,8 +85,21 @@ public class LocationService {
             return locationRepository.save(location);
     }       /// test method and have it run on /location/id endpoint and make id a path variable
 
-    public void deleteLocation(int id) {
-        locationRepository.deleteById(id);
+    @Transactional
+    public void deleteLocation(int id) throws IllegalArgumentException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = null;
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails userDetails) {
+            String username = userDetails.getUsername();
+            user = (User) userRepository.findByFirstName(username)
+                    .orElseThrow(()-> new IllegalArgumentException("No user found."));
+        } else {
+            throw new IllegalStateException("No authenticated user found.");
+        }
+        int deleted = locationRepository.deleteByIdAndUserId(id,user.getId());
+        if(deleted == 0){
+            throw new IllegalArgumentException("Unable to delete Location with id '"+id+"'");
+        }
     }
 
     public List<Location> getLocationsInArea(String polygon){
